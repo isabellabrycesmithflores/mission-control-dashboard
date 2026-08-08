@@ -1,80 +1,56 @@
 # 🌐 Communication with external APIs
 
-from abc import ABC, abstractmethod
+import requests
 from datetime import datetime
 
-import requests
 
-
-class RequestsAPI(ABC):
-    """Abstract base class for external API request handlers."""
-
-    @abstractmethod
-    def get(self, endpoint: str, params: dict | None = None, timeout: int = 10) -> requests.Response:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_upcoming_launches(self) -> list[dict]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def display_launches(self, launches: list[dict]) -> None:
-        raise NotImplementedError
-
-
-class Requests(RequestsAPI):
-    """Concrete implementation for The Space Devs API."""
-
-    BASE_URL = "https://ll.thespacedevs.com/2.3.0"
-
-    def get(self, endpoint: str, params: dict | None = None, timeout: int = 10) -> requests.Response:
-        url = f"{self.BASE_URL}{endpoint}"
-        response = requests.get(url, params=params, timeout=timeout)
-        response.raise_for_status()
-        return response
-
-    def get_upcoming_launches(self) -> list[dict]:
-        response = self.get("/launches/upcoming/")
-        data = response.json()
-        return data.get("results", [])
-
-    def display_launches(self, launches: list[dict]) -> None:
-        print()
-        print("================================")
-        print("     🚀 UPCOMING LAUNCHES")
-        print("================================")
-        print()
-
-        if not launches:
-            print("No upcoming launches found.")
-            return
-
-        for launch in launches:
-            name = launch.get("name", "Unknown")
-            net = launch.get("net", "Unknown")
-            provider = launch.get("launch_service_provider", {}).get("name", "Unknown")
-
-            print(f"🚀 {name}")
-            print(f"📅 {self._format_launch_date(net)}")
-            print(f"🏢 {provider}")
-            print("--------------------------------")
-
-    def _format_launch_date(self, net: str) -> str:
-        try:
-            parsed_date = datetime.fromisoformat(net.replace("Z", "+00:00"))
-            return parsed_date.strftime("%Y-%m-%d %H:%M UTC")
-        except ValueError:
-            return net
-
-
-default_requests = Requests()
-
-
-def get_upcoming_launches() -> list[dict]:
+def get_upcoming_launches():
     """Fetch upcoming launches from The Space Devs API."""
-    return default_requests.get_upcoming_launches()
+
+    url = "https://ll.thespacedevs.com/2.3.0/launches/upcoming/"
+
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+
+    except requests.RequestException as error:
+        print(f"Unable to retrieve launch data: {error}")
+        return []
+
+    data = response.json()
+
+    launches = data["results"]
+
+    return launches
 
 
-def display_launches(launches: list[dict]) -> None:
+def display_launches(launches):
     """Display upcoming launches in the terminal."""
-    default_requests.display_launches(launches)
+
+    print()
+    print("================================")
+    print("     🚀 UPCOMING LAUNCHES")
+    print("================================")
+
+    for launch in launches:
+        name = launch["name"]
+
+        date = datetime.fromisoformat(
+            launch["net"].replace("Z", "+00:00")
+        )
+
+        formatted_date = date.strftime("%d %B %Y • %H:%M")
+
+        provider_data = launch.get("launch_service_provider")
+
+        if provider_data:
+            provider = provider_data.get("name", "Unknown Provider")
+        else: 
+            provider = "Unknown Provider"
+
+        print(f"🚀 {name}")
+        print(f"📅 {formatted_date}")
+        print(f"🏢 {provider}")
+        print("------------------------------")
+
+    

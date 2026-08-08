@@ -1,6 +1,7 @@
 # 🚀 Mission Control Dashboard
 
 from api import get_upcoming_launches, display_launches
+from database import create_database, save_launches
 
 
 print("================================")
@@ -13,14 +14,12 @@ print()
 
 launches = get_upcoming_launches()
 
+connection = create_database()
+
+save_launches(connection, launches)
+
+connection.close()
+
 print(f"Upcoming launches tracked: {len(launches)}")
 
 display_launches(launches)
-
-def get_next_launch(launches):
-    """Return the next upcoming launch."""
-
-    if not launches:
-        return None
-
-    return launches[0]
