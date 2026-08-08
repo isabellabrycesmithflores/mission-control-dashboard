@@ -16,3 +16,11 @@ launches = get_upcoming_launches()
 print(f"Upcoming launches tracked: {len(launches)}")
 
 display_launches(launches)
+
+def get_next_launch(launches):
+    """Return the next upcoming launch."""
+
+    if not launches:
+        return None
+
+    return launches[0]
