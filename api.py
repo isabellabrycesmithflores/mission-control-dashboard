@@ -45,12 +45,14 @@ def display_launches(launches):
 
         if provider_data:
             provider = provider_data.get("name", "Unknown Provider")
-        else: 
+        else:
             provider = "Unknown Provider"
+
+        status = launch["status"]["name"]
 
         print(f"🚀 {name}")
         print(f"📅 {formatted_date}")
         print(f"🏢 {provider}")
+        print(f"📡 {status}")
         print("------------------------------")
-
-    
+        

@@ -1,5 +1,5 @@
-
 import sqlite3
+
 
 def create_database():
     """Create the SQLite database and launches table."""
@@ -9,14 +9,14 @@ def create_database():
     cursor = connection.cursor()
 
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS launches (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        api_id TEXT UNIQUE,
-        name TEXT,
-        date TEXT,
-        provider TEXT,
-        status TEXT
-    )
+        CREATE TABLE IF NOT EXISTS launches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            api_id TEXT UNIQUE,
+            name TEXT,
+            date TEXT,
+            provider TEXT,
+            status TEXT
+        )
     """)
 
     connection.commit()
@@ -49,14 +49,30 @@ def save_launches(connection, launches):
 
     connection.commit()
 
-connection = create_database()
 
-cursor = connection.cursor()
+def get_spacex_launches(connection):
+    """Get all SpaceX launches from the database."""
 
-cursor.execute("SELECT COUNT(*) FROM launches")
+    cursor = connection.cursor()
 
-count = cursor.fetchone()[0]
+    cursor.execute("""
+        SELECT * FROM launches
+        WHERE provider = ?
+    """, ("SpaceX",))
 
-print(f"Launches stored in database: {count}")
+    return cursor.fetchall()
 
-connection.close()
+
+def get_next_launch(connection):
+    """Get the next upcoming launch from the database."""
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT * FROM launches
+        WHERE status = ?
+        ORDER BY date ASC
+        LIMIT 1
+    """, ("Upcoming",))
+
+    return cursor.fetchone()
