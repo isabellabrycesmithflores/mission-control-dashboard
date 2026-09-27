@@ -10,6 +10,32 @@ from database import create_database, save_launches, get_saved_launches
 
 st.set_page_config(page_title="Mission Control", page_icon="🚀", layout="wide")
 
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap');
+
+.stApp, .stApp p, .stApp label {
+    font-family: 'Quicksand', sans-serif;
+}
+
+.stApp h1 {
+    font-family: 'Pacifico', cursive !important;
+    color: #C2185B !important;
+    font-size: 3rem !important;
+}
+
+.stApp h2, .stApp h3 {
+    font-family: 'Quicksand', sans-serif !important;
+    font-weight: 700 !important;
+    color: #AD1457 !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #C2185B !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 st.title("🚀 Mission Control")
 st.caption("Live tracker for upcoming rocket launches around the world")
 
