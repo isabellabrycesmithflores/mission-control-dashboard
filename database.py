@@ -23,9 +23,8 @@ def create_database():
 
     return connection
 
-
 def save_launches(connection, launches):
-    """Save launch data into the database."""
+    """Save launch data into the database, updating any that already exist."""
 
     cursor = connection.cursor()
 
@@ -33,6 +32,7 @@ def save_launches(connection, launches):
         api_id = launch["id"]
         name = launch["name"]
         date = launch["net"]
+        status = launch["status"]["name"]
 
         provider = launch.get("launch_service_provider")
 
@@ -42,13 +42,16 @@ def save_launches(connection, launches):
             provider = "Unknown provider"
 
         cursor.execute("""
-            INSERT OR IGNORE INTO launches
-            (api_id, name, date, provider, status)
+            INSERT INTO launches (api_id, name, date, provider, status)
             VALUES (?, ?, ?, ?, ?)
-        """, (api_id, name, date, provider, "Upcoming"))
+            ON CONFLICT(api_id) DO UPDATE SET
+                name = excluded.name,
+                date = excluded.date,
+                provider = excluded.provider,
+                status = excluded.status
+        """, (api_id, name, date, provider, status))
 
     connection.commit()
-
 
 def get_spacex_launches(connection):
     """Get all SpaceX launches from the database."""
