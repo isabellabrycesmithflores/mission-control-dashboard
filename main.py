@@ -1,7 +1,7 @@
 # 🚀 Mission Control Dashboard
 
 from api import get_upcoming_launches, display_launches
-from database import create_database, save_launches
+from database import create_database, save_launches, get_saved_launches
 
 
 print("================================")
@@ -16,10 +16,15 @@ launches = get_upcoming_launches()
 
 connection = create_database()
 
-save_launches(connection, launches)
+if launches:
+    save_launches(connection, launches)
+else:
+    print("📴 Offline mode: showing saved launches")
+    launches = get_saved_launches(connection)
 
 connection.close()
 
 print(f"Upcoming launches tracked: {len(launches)}")
 
 display_launches(launches)
+

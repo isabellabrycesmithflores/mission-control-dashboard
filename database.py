@@ -79,3 +79,25 @@ def get_next_launch(connection):
     """, ("Upcoming",))
 
     return cursor.fetchone()
+
+def get_saved_launches(connection):
+    """Load saved launches from the database, in the same shape as the API data."""
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT name, date, provider, status FROM launches
+        ORDER BY date ASC
+    """)
+
+    launches = []
+
+    for name, date, provider, status in cursor.fetchall():
+        launches.append({
+            "name": name,
+            "net": date,
+            "launch_service_provider": {"name": provider},
+            "status": {"name": status},
+        })
+
+    return launches
