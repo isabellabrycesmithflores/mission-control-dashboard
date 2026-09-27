@@ -2,6 +2,8 @@
 
 A Python terminal app that tracks upcoming rocket launches from around the world.
 
+**[🚀 Try the live app](https://space-mission-control-dashboard-isabella.streamlit.app)**
+
 ## Features
 - Fetches live launch data from The Space Devs API
 - Shows each launch's name, date, provider and status
