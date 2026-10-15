@@ -1,3 +1,4 @@
+# Main entry point for the Mission Control Dashboard application.
 # 🚀 Mission Control Dashboard
 
 from api import get_upcoming_launches, display_launches

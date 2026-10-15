@@ -1,5 +1,8 @@
+# This module handles the SQLite database for the mission control application. The database is used to also store launch information when the application is offline or when the API is unavailable.
+
 import sqlite3
 
+from datetime import datetime, timezone
 
 def create_database():
     """Create the SQLite database and launches table."""
@@ -53,30 +56,20 @@ def save_launches(connection, launches):
 
     connection.commit()
 
-def get_spacex_launches(connection):
-    """Get all SpaceX launches from the database."""
-
-    cursor = connection.cursor()
-
-    cursor.execute("""
-        SELECT * FROM launches
-        WHERE provider = ?
-    """, ("SpaceX",))
-
-    return cursor.fetchall()
-
 
 def get_next_launch(connection):
-    """Get the next upcoming launch from the database."""
+    """Get the next launch that hasn't happened yet."""
 
     cursor = connection.cursor()
 
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
     cursor.execute("""
-        SELECT * FROM launches
-        WHERE status = ?
+        SELECT name, date, provider FROM launches
+        WHERE date >= ?
         ORDER BY date ASC
         LIMIT 1
-    """, ("Upcoming",))
+    """, (now,))
 
     return cursor.fetchone()
 
