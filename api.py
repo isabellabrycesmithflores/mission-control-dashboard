@@ -1,4 +1,4 @@
-# 🌐 Communication with external APIs
+# Communication with external APIs
 
 import requests
 from datetime import datetime
@@ -32,7 +32,7 @@ def display_launches(launches):
     table = Table(title="🚀 Upcoming Launches", header_style="bold cyan")
 
     table.add_column("Mission", style="bold white")
-    table.add_column("Date", style="green")
+    table.add_column("Date (UTC)", style="bright_blue")
     table.add_column("Provider", style="magenta")
     table.add_column("Status")
 
