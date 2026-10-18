@@ -134,10 +134,10 @@ for launch, date in upcoming:
         status = launch["status"]["name"]
 
         if status == "Go for Launch":
-            colour = "#36C99A"
+            colour = "green"
         elif "Confirmed" in status or "Determined" in status:
-            colour = "#F28C28"
+            colour = "orange"
         else:
-            colour = "#C7C7C7"
+            colour = "white"
 
 details.markdown(f":{colour}-badge[{status}]")
