@@ -14,24 +14,37 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&display=swap');
 
+
+.stApp {
+    background-color: #0b0d17;
+    background-image:
+        radial-gradient(1px 1px at 20px 30px, white, transparent),
+        radial-gradient(1px 1px at 90px 140px, white, transparent),
+        radial-gradient(1.5px 1.5px at 160px 60px, white, transparent),
+        radial-gradient(1px 1px at 130px 180px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 50px 110px, rgba(255,255,255,0.7), transparent);
+    background-size: 200px 200px;
+}
+.stApp p, .stApp label, .stApp span { color: #e6edf3; }
+
 .stApp, .stApp p, .stApp label {
     font-family: 'Quicksand', sans-serif;
 }
 
 .stApp h1 {
-    font-family: 'Pacifico', cursive !important;
-    color: #C2185B !important;
+    font-family: 'Exo 2', sans-serif !important;
+    color: #ff5fa2 !important;
     font-size: 3rem !important;
 }
 
 .stApp h2, .stApp h3 {
     font-family: 'Quicksand', sans-serif !important;
     font-weight: 700 !important;
-    color: #AD1457 !important;
+    color: #ff5fa2 !important;
 }
 
 [data-testid="stMetricValue"] {
-    color: #C2185B !important;
+    color: #ff5fa2 !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -89,10 +102,10 @@ if upcoming:
     hours = time_left.seconds // 3600
 
     col1, col2, col3 = st.columns(3)
-    col1.metric("Next launch", next_launch["name"].split("|")[-1].strip())
-    col2.metric("Countdown", f"{days}d {hours}h")
-    col3.metric("Launches tracked", len(upcoming))
-
+    short_name = next_launch["name"].split("|")[-1].split("(")[0].strip()
+    col1.metric("Next launch:", short_name)
+    col2.metric("Countdown:", f"{days}d {hours}h")
+    col3.metric("Launches tracked:", len(upcoming))
 st.divider()
 
 # Filter
@@ -118,4 +131,13 @@ for launch, date in upcoming:
         details.subheader(launch["name"])
         details.write(f"📅 {date.strftime('%d %B %Y • %H:%M')} UTC")
         details.write(f"🏢 {provider}")
-        details.write(f"📡 {launch['status']['name']}")
+        status = launch["status"]["name"]
+
+        if status == "Go for Launch":
+            colour = "#36C99A"
+        elif "Confirmed" in status or "Determined" in status:
+            colour = "#F28C28"
+        else:
+            colour = "#C7C7C7"
+
+details.markdown(f":{colour}-badge[{status}]")

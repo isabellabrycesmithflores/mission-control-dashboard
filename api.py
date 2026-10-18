@@ -31,9 +31,9 @@ def display_launches(launches):
 
     table = Table(title="🚀 Upcoming Launches", header_style="bold cyan")
 
-    table.add_column("Mission", style="bold white")
-    table.add_column("Date (UTC)", style="bright_blue")
-    table.add_column("Provider", style="magenta")
+    table.add_column("Mission", style="#FFFFFF")
+    table.add_column("Date (UTC)", style="#4872DB")
+    table.add_column("Provider", style="#DE456E")
     table.add_column("Status")
 
     for launch in launches:
@@ -54,11 +54,11 @@ def display_launches(launches):
         status = launch["status"]["name"]
 
         if status == "Go for Launch":
-            colour = "green"
+            colour = "#36C99A"
         elif "Confirmed" in status or "Determined" in status:
-            colour = "yellow"
+            colour = "#F1E69D"
         else:
-            colour = "white"
+            colour = "#FFFFFF"
 
         table.add_row(name, formatted_date, provider, f"[{colour}]{status}[/]")
 
