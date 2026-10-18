@@ -12,11 +12,11 @@ This App:
 - Offline mode: shows the saved launches if the API can not be reached due to no wifi 
 
 # Built with
--Python
--The Space Devs Launch Library 2 API
--SQLite
--Rich
--Streamlit
+- Python
+- The Space Devs Launch Library 2 API
+- SQLite
+- Rich
+- Streamlit
 - https://htmlcolorcodes.com/color-wheel/ 
 
 
